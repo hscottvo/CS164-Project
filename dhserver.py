@@ -1,7 +1,7 @@
 from socket import *
 
-DHCP_SERVER = ('', 67)
-DHCP_CLIENT = ('255.255.255.255', 68)
+DHCP_SERVER = ("", 67)
+DHCP_CLIENT = ("255.255.255.255", 68)
 
 # Create a UDP socket
 s = socket(AF_INET, SOCK_DGRAM)
@@ -16,12 +16,12 @@ s.bind(DHCP_SERVER)
 msg, addr = s.recvfrom(1024)
 
 print(type(msg))
-print(msg)
+print(len(msg))
 # Print the client's MAC Address from the DHCP header
-print("Client's MAC Address is " + format(msg[28], 'x'), end = '')
+print("Client's MAC Address is " + format(msg[28], "x"), end="")
 for i in range(29, 34):
-	print(":" + format(msg[i], 'x'), end = '')
+    print(":" + format(msg[i], "x"), end="")
 print()
-print('client\'s current ip address: ' + '.'.join(format(x, 'x') for x in msg[13:17]))
+print("client's current ip address: " + ".".join(format(x, "x") for x in msg[13:17]))
 # Send a UDP message (Broadcast)
-s.sendto(b'Hello World!', DHCP_CLIENT)
+s.sendto(b"Hello World!", DHCP_CLIENT)
