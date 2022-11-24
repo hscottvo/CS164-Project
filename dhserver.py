@@ -24,7 +24,7 @@ print("Client's MAC Address is " + format(msg[28], "x"), end="")
 for i in range(29, 34):
     print(":" + format(msg[i], "x"), end="")
 print()
-print("Transaction ID: " + ".".join(format(x, "x") for x in msg[4:8]))
+print("Transaction ID: " + int.from_bytes(msg[4:8], "big"))
 print("client's current ip address: " + ".".join(format(x, "x") for x in msg[12:16]))
 print("yiaddr: " + ".".join(format(x, "x") for x in msg[16:20]))
 # Send a UDP message (Broadcast)
