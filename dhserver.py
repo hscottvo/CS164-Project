@@ -1,6 +1,6 @@
 from socket import *
 
-DHCP_SERVER = ("192.168.0.1", 67)
+DHCP_SERVER = ("192.168.0.255", 67)
 DHCP_CLIENT = ("255.255.255.255", 68)
 
 available_ips = set(i for i in range(1, 255))
