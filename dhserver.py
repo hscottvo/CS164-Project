@@ -47,7 +47,7 @@ while True:
         + transaction_id
         + reply[8:16]
         + yiaddr
-        + reply[20:]
+        + (b"\x00" * (len(msg) - 20))
     )
     # Send a UDP message (Broadcast)
     s.sendto(reply, DHCP_CLIENT)
