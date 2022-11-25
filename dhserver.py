@@ -3,7 +3,10 @@ from socket import *
 DHCP_SERVER = ("", 67)
 DHCP_CLIENT = ("255.255.255.255", 68)
 
-available_ips = set(i for i in range(1, 255))
+subnet = [192, 168, 0]
+
+available_hosts = set(i for i in range(1, 255))
+open_requests = set()
 
 # Create a UDP socket
 s = socket(AF_INET, SOCK_DGRAM)
@@ -14,21 +17,25 @@ s.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 # Bind socket to the well-known port reserved for DHCP servers
 s.bind(DHCP_SERVER)
 
-# Recieve a UDP message
-msg, addr = s.recvfrom(1024)
+while True:
+    # Recieve a UDP message
+    msg, addr = s.recvfrom(1024)
+    transaction_id = msg[4:8]
 
-print(type(msg))
-print(len(msg))
-# Print the client's MAC Address from the DHCP header
-print("Client's MAC Address is " + format(msg[28], "x"), end="")
-for i in range(29, 34):
-    print(":" + format(msg[i], "x"), end="")
-print()
-print("Transaction ID: " + str(int.from_bytes(msg[4:8], "big")))
-print("client's current ip address: " + ".".join(format(x, "x") for x in msg[12:16]))
-print("yiaddr: " + ".".join(format(x, "x") for x in msg[16:20]))
-# Send a UDP message (Broadcast)
+    reply = b"\x00" * len(msg)
+    # request
+    if transaction_id in open_requests:
+        yiaddr = msg[16:20]
 
-reply = b"0" * len(msg)
+    # discover
+    else:
+        open_requests.add(transaction_id)
+        host = available_hosts.pop()
+        ip_bytes = subnet + [host]
+        yiaddr = bytes(ip_bytes)
 
-s.sendto(b"Hello World!", DHCP_CLIENT)
+    assert len(transaction_id) == 4
+    assert len(yiaddr) == 4
+    reply = reply[:4] + transaction_id + reply[8:16] + yiaddr + reply[20:]
+    # Send a UDP message (Broadcast)
+    s.sendto(reply, DHCP_CLIENT)
