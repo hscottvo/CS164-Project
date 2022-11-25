@@ -40,6 +40,14 @@ while True:
 
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
-    reply = reply[:4] + transaction_id + reply[8:16] + yiaddr + reply[20:]
+    reply = (
+        reply[:2]
+        + bytes([len(msg)])
+        + reply[3]
+        + transaction_id
+        + reply[8:16]
+        + yiaddr
+        + reply[20:]
+    )
     # Send a UDP message (Broadcast)
     s.sendto(reply, DHCP_CLIENT)
