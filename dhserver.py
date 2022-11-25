@@ -25,12 +25,14 @@ while True:
     reply = b"\x00" * len(msg)
     # request
     if transaction_id in open_requests:
-        print("Got request from transaction id" + transaction_id + ". Sending ack")
+        print("Got request from transaction id" + str(transaction_id) + ". Sending ack")
         yiaddr = msg[16:20]
 
     # discover
     else:
-        print("got discover from transaction id" + transaction_id + ". Sending offer")
+        print(
+            "got discover from transaction id" + str(transaction_id) + ". Sending offer"
+        )
         open_requests.add(transaction_id)
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
