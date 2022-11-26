@@ -46,7 +46,7 @@ while True:
         + [reply[3]]
         + list(transaction_id)
         + reply[8:16]
-        + yiaddr
+        + ip_bytes
     )
     # Send a UDP message (Broadcast)
     s.sendto(reply, DHCP_CLIENT)
