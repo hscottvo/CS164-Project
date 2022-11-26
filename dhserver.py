@@ -24,11 +24,6 @@ while True:
     msg, addr = s.recvfrom(1024)
     transaction_id = msg[4:8]
     mac_address = list(msg[28:44])
-    msg_list = list(msg)
-    for i in range(len(msg) // 4):
-        print(i, list(msg[i * 4 : min(i * 4 + 4, len(msg))]))
-
-    print(list(msg))
 
     reply = [0] * len(msg)
     # request
@@ -57,8 +52,7 @@ while True:
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
     reply = (
-        [2, 1]
-        + [6]
+        [2, 1, 6]
         + [reply[3]]
         + list(transaction_id)
         + reply[8:16]
@@ -69,8 +63,7 @@ while True:
         + reply[44:]
     )
 
-    print("Sending. Currently cached ip's: ", cached_ip)
+    print("Sending. Currently cached ip's: ", open_requests)
 
     # Send a UDP message (Broadcast)
     s.sendto(bytes(reply), DHCP_CLIENT)
-    # s.sendto(bytes(reply), ('.'.join(str(i) for i in mac_address[:4]), 68))
