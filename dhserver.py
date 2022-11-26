@@ -22,7 +22,7 @@ while True:
     msg, addr = s.recvfrom(1024)
     transaction_id = msg[4:8]
 
-    reply = b"\x00" * len(msg)
+    reply = [0] * len(msg)
     # request
     if transaction_id in open_requests:
         print("Got request from transaction id" + str(transaction_id) + ". Sending ack")
@@ -40,14 +40,8 @@ while True:
 
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
-    reply = (
-        reply[:2]
-        + bytes([len(msg)])
-        + reply[3]
-        + transaction_id
-        + reply[8:16]
-        + yiaddr
-        + (b"\x00" * (len(msg) - 20))
+    reply = bytes(
+        reply[:2] + [len(msg)] + reply[3] + list(transaction_id) + reply[8:16] + yiaddr
     )
     # Send a UDP message (Broadcast)
     s.sendto(reply, DHCP_CLIENT)
