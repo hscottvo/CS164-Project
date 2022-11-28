@@ -49,7 +49,7 @@ while True:
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
         yiaddr = bytes(ip_bytes)
-        cached_ip.add((ip_bytes))
+        cached_ip.add(str(ip_bytes))
 
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
