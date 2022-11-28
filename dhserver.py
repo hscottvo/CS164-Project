@@ -28,7 +28,7 @@ while True:
     reply = [0] * len(msg)
     # request -> ack
     if mac_address in open_requests:
-        print("Got request from transaction id " + str(mac_address) + ". Sending ack")
+        print("Got request from mac address " + str(mac_address) + ". Sending ack")
         yiaddr = msg[16:20]
         ip_bytes = list(yiaddr)
         cached_ip.add(str(ip_bytes))
@@ -36,9 +36,7 @@ while True:
 
     # discover -> offer
     else:
-        print(
-            "got discover from transaction id " + str(mac_address) + ". Sending offer"
-        )
+        print("got discover from mac address " + str(mac_address) + ". Sending offer")
         open_requests.add(mac_address)
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
@@ -46,8 +44,6 @@ while True:
         cached_ip.add(str(ip_bytes))
         message_type = 2
 
-    assert len(transaction_id) == 4
-    assert len(yiaddr) == 4
     reply = (
         [2, 1, 6]
         + [reply[3]]
@@ -64,7 +60,9 @@ while True:
         + [54, 4, 192, 168, 0, 1]
     )
 
-    print("Sending. Currently cached ip's: ", open_requests)
+    print("Sending. Currently cached ip's: ")
+    for i in open_requests:
+        print(f"\t{list(mac_address)}")
 
     # Send a UDP message (Broadcast)
     s.sendto(bytes(reply), DHCP_CLIENT)
