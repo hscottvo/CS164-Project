@@ -23,13 +23,15 @@ while True:
     # Recieve a UDP message
     msg, addr = s.recvfrom(1024)
     transaction_id = msg[4:8]
-    mac_address = msg[28:44]
+    mac_address = list(msg[28:44])
 
     reply = [0] * len(msg)
     # request
-    if mac_address in open_requests:
+    if transaction_id in open_requests:
         print(
-            "Got request from mac address " + str(list(mac_address)) + ". Sending ack"
+            "Got request from transaction id "
+            + str(list(transaction_id))
+            + ". Sending ack"
         )
         yiaddr = msg[16:20]
         ip_bytes = list(yiaddr)
@@ -39,14 +41,15 @@ while True:
     # discover
     else:
         print(
-            "got discover from mac address "
+            "got discover from transaction id "
             + str(list(mac_address))
             + ". Sending offer"
         )
-        open_requests.add(mac_address)
+        open_requests.add(transaction_id)
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
         yiaddr = bytes(ip_bytes)
+        cached_ip.add(ip_bytes)
 
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
@@ -59,8 +62,7 @@ while True:
         + server_ip
         + reply[24:28]
         + mac_address
-        + reply[44:240]
-        + [53, 1, message_type]
+        + reply[44:]
     )
 
     print("Sending. Currently cached ip's: ", open_requests)
