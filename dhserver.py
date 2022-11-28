@@ -27,11 +27,9 @@ while True:
 
     reply = [0] * len(msg)
     # request
-    if transaction_id in open_requests:
+    if mac_address in open_requests:
         print(
-            "Got request from transaction id "
-            + str(list(transaction_id))
-            + ". Sending ack"
+            "Got request from mac address " + str(list(mac_address)) + ". Sending ack"
         )
         yiaddr = msg[16:20]
         ip_bytes = list(yiaddr)
@@ -41,15 +39,16 @@ while True:
     # discover
     else:
         print(
-            "got discover from transaction id "
-            + str(list(transaction_id))
+            "got discover from mac address "
+            + str(list(mac_address))
             + ". Sending offer"
         )
-        open_requests.add(transaction_id)
+        open_requests.add(mac_address)
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
         yiaddr = bytes(ip_bytes)
         cached_ip.add(ip_bytes)
+        message_type = 5
 
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
