@@ -23,7 +23,7 @@ while True:
     # Recieve a UDP message
     msg, addr = s.recvfrom(1024)
     transaction_id = msg[4:8]
-    mac_address = list(msg[28:44])
+    mac_address = msg[28:44]
 
     reply = [0] * len(msg)
     # request
