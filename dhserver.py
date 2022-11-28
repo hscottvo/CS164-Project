@@ -26,7 +26,7 @@ while True:
     mac_address = list(msg[28:44])
 
     reply = [0] * len(msg)
-    # request
+    # request -> ack
     if transaction_id in open_requests:
         print(
             "Got request from transaction id "
@@ -36,9 +36,9 @@ while True:
         yiaddr = msg[16:20]
         ip_bytes = list(yiaddr)
         cached_ip.add(str(ip_bytes))
-        message_type = 2
+        message_type = 5
 
-    # discover
+    # discover -> offer
     else:
         print(
             "got discover from transaction id "
@@ -50,6 +50,7 @@ while True:
         ip_bytes = subnet + [host]
         yiaddr = bytes(ip_bytes)
         cached_ip.add(str(ip_bytes))
+        message_type = 2
 
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
@@ -62,7 +63,8 @@ while True:
         + server_ip
         + reply[24:28]
         + mac_address
-        + reply[44:]
+        + reply[44:240]
+        + [53, 1, message_type]
     )
 
     print("Sending. Currently cached ip's: ", open_requests)
