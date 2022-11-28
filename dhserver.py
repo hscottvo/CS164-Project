@@ -47,8 +47,6 @@ while True:
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
         yiaddr = bytes(ip_bytes)
-        cached_ip.add(ip_bytes)
-        message_type = 5
 
     assert len(transaction_id) == 4
     assert len(yiaddr) == 4
@@ -65,7 +63,7 @@ while True:
         + [53, 1, message_type]
     )
 
-    print("Sending. Currently cached ip's: ", cached_ip)
+    print("Sending. Currently cached ip's: ", open_requests)
 
     # Send a UDP message (Broadcast)
     s.sendto(bytes(reply), DHCP_CLIENT)
