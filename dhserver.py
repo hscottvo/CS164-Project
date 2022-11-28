@@ -61,7 +61,7 @@ while True:
         + [53, 1, message_type]
         + [1, 4, 255, 255, 255, 0]
         + [3, 4, 192, 168, 0, 1]
-        + [54, 1, 192, 168, 0, 1]
+        + [54, 4, 192, 168, 0, 1]
     )
 
     print("Sending. Currently cached ip's: ", open_requests)
