@@ -70,7 +70,7 @@ while True:
         print(
             "\tMac address: ",
             i,
-            "ip address: ",
+            "\n\tip address: ",
             ".".join(j.strip("[]").split(", ")),
             sep="",
         )
