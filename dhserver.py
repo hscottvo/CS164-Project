@@ -66,7 +66,7 @@ while True:
     )
 
     print("Sending. Currently cached ip's: ")
-    for i, j in cached_ip:
+    for i, j in cached_ip.items():
         print(
             "\tMac address: ",
             i,
