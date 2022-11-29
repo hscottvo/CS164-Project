@@ -24,10 +24,13 @@ while True:
     msg, addr = s.recvfrom(1024)
     transaction_id = msg[4:8]
     mac_address = msg[28:44]
+    print(list(msg))
+    print(list(msg).index(53))
 
     reply = [0] * len(msg)
     # request -> ack
-    if mac_address in open_requests:
+    # if mac_address in open_requests:
+    if list(msg)[242] == 3: 
         print("Got request from mac address " + str(mac_address) + ". Sending ack")
         yiaddr = msg[16:20]
         ip_bytes = list(yiaddr)
