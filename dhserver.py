@@ -6,9 +6,10 @@ DHCP_CLIENT = ("255.255.255.255", 68)
 subnet = [192, 168, 0]
 server_ip = subnet + [1]
 
-available_hosts = set(i for i in range(1, 255))
+available_hosts = set(i for i in range(0, 256))
 open_requests = set()
-cached_ip = set()
+cached_ip = {str(server_ip)}
+available_hosts.remove(1)
 
 # Create a UDP socket
 s = socket(AF_INET, SOCK_DGRAM)
@@ -64,9 +65,8 @@ while True:
     )
 
     print("Sending. Currently cached ip's: ")
-    for i in open_requests:
-        # print(f"\t{list(mac_address)}")
-        print("\t", list(i), sep="")
+    for i in cached_ip:
+        print("\t", i, sep="")
 
     # Send a UDP message (Broadcast)
     s.sendto(bytes(reply), DHCP_CLIENT)
