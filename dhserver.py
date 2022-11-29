@@ -73,6 +73,7 @@ while True:
             "\n\tip address: ",
             ".".join(j.strip("[]").split(", ")),
             sep="",
+            end="\n\n",
         )
 
     # Send a UDP message (Broadcast)
