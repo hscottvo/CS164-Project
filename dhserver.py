@@ -66,7 +66,7 @@ while True:
 
     print("Sending. Currently cached ip's: ")
     for i in cached_ip:
-        print("\t", i, sep="")
+        print("\t", ".".join(str(j) for j in i), sep="")
 
     # Send a UDP message (Broadcast)
     s.sendto(bytes(reply), DHCP_CLIENT)
