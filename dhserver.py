@@ -8,7 +8,7 @@ server_ip = subnet + [1]
 
 available_hosts = set(i for i in range(0, 256))
 open_requests = set()
-cached_ip = {str(server_ip)}
+cached_ip = {"server": str(server_ip)}
 available_hosts.remove(1)
 
 # Create a UDP socket
@@ -24,33 +24,28 @@ while True:
     # Recieve a UDP message
     msg, addr = s.recvfrom(1024)
     transaction_id = msg[4:8]
-    mac_address = msg[28:44]
+    mac_address = msg[28:34]
+    mac_address_string = ":".join(format(i, "x") for i in list(mac_address))
     magic_cookie = list(msg)[236:240]
 
     reply = [0] * len(msg)
     # request -> ack
     # if mac_address in open_requests:
     if list(msg)[242] == 3:
-        print(
-            "Got request from mac address " + str(list(mac_address)) + ". Sending ack"
-        )
+        print("Got request from mac address " + mac_address_string + ". Sending ack")
         yiaddr = msg[16:20]
         ip_bytes = list(yiaddr)
-        cached_ip.add(str(ip_bytes))
+        cached_ip[mac_address_string] = str(ip_bytes)
         message_type = 5
 
     # discover -> offer
     else:
-        print(
-            "got discover from mac address "
-            + str(list(mac_address))
-            + ". Sending offer"
-        )
+        print("Got discover from mac address " + mac_address_string + ". Sending offer")
         open_requests.add(mac_address)
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
         yiaddr = bytes(ip_bytes)
-        cached_ip.add(str(ip_bytes))
+        cached_ip[mac_address_string] = str(ip_bytes)
         message_type = 2
 
     reply = (
@@ -71,8 +66,14 @@ while True:
     )
 
     print("Sending. Currently cached ip's: ")
-    for i in cached_ip:
-        print("\t", ".".join(i.strip("[]").split(", ")), sep="")
+    for i, j in cached_ip:
+        print(
+            "\tMac address: ",
+            i,
+            "ip address: ",
+            ".".join(j.strip("[]").split(", ")),
+            sep="",
+        )
 
     # Send a UDP message (Broadcast)
     s.sendto(bytes(reply), DHCP_CLIENT)
