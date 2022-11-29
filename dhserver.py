@@ -31,7 +31,9 @@ while True:
     # request -> ack
     # if mac_address in open_requests:
     if list(msg)[242] == 3:
-        print("Got request from mac address " + str(mac_address) + ". Sending ack")
+        print(
+            "Got request from mac address " + str(list(mac_address)) + ". Sending ack"
+        )
         yiaddr = msg[16:20]
         ip_bytes = list(yiaddr)
         cached_ip.add(str(ip_bytes))
@@ -39,7 +41,11 @@ while True:
 
     # discover -> offer
     else:
-        print("got discover from mac address " + str(mac_address) + ". Sending offer")
+        print(
+            "got discover from mac address "
+            + str(list(mac_address))
+            + ". Sending offer"
+        )
         open_requests.add(mac_address)
         host = available_hosts.pop()
         ip_bytes = subnet + [host]
