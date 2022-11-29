@@ -67,7 +67,7 @@ while True:
     print("Sending. Currently cached ip's: ")
     for i in open_requests:
         # print(f"\t{list(mac_address)}")
-        print("\t", i, sep="")
+        print("\t", list(i), sep="")
 
     # Send a UDP message (Broadcast)
     s.sendto(bytes(reply), DHCP_CLIENT)
