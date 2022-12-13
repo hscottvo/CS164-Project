@@ -6,7 +6,7 @@ DHCP_CLIENT = ("255.255.255.255", 68)
 subnet = [192, 168, 0]
 server_ip = subnet + [1]
 
-available_hosts = set(i for i in range(0, 256))
+available_hosts = set(i for i in range(1, 256))
 open_requests = set()
 cached_ip = {"server": str(server_ip)}
 available_hosts.remove(1)
@@ -58,6 +58,7 @@ while True:
         + reply[24:28]
         + list(mac_address)
         + reply[44:236]
+	+ magic_cookie 
         + [0] * 192
         + [53, 1, message_type]
         + [1, 4, 255, 255, 255, 0]
